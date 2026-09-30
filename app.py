@@ -88,7 +88,7 @@ if st.button("Predict Default"):
     }
 
     response = requests.post(
-        "http://127.0.0.1:8000/predict",
+        "https://credit-card-defaulter-3.onrender.com/predict",
         json=data
     )
 
