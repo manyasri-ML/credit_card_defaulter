@@ -1,113 +1,146 @@
-import streamlit as st
-import requests
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import numpy as np
+import joblib
 
 
-st.title("Credit Card Default Prediction")
+# ==========================================
+# CREATE FASTAPI APP
+# ==========================================
 
-st.write("Enter customer information to predict credit card default.")
+app = FastAPI()
 
 
-LIMIT_BAL = st.number_input("Credit Limit", value=20000.0)
+# ==========================================
+# CORS
+# ==========================================
 
-CHILDREN = st.number_input(
-    "Children",
-    min_value=0,
-    value=0,
-    step=1
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-EDUCATION = st.number_input(
-    "Education",
-    min_value=0,
-    value=2,
-    step=1
-)
 
-MARRIAGE = st.number_input(
-    "Marriage",
-    min_value=0,
-    value=1,
-    step=1
-)
+# ==========================================
+# LOAD MODEL AND SCALER
+# ==========================================
 
-AGE = st.number_input(
-    "Age",
-    min_value=18,
-    value=24,
-    step=1
-)
-
-PAY_0 = st.number_input("PAY_0", value=2, step=1)
-PAY_2 = st.number_input("PAY_2", value=2, step=1)
-PAY_3 = st.number_input("PAY_3", value=-1, step=1)
-PAY_4 = st.number_input("PAY_4", value=-1, step=1)
-PAY_5 = st.number_input("PAY_5", value=-2, step=1)
-PAY_6 = st.number_input("PAY_6", value=-2, step=1)
-
-BILL_AMT1 = st.number_input("BILL_AMT1", value=3913.0)
-BILL_AMT2 = st.number_input("BILL_AMT2", value=3102.0)
-BILL_AMT3 = st.number_input("BILL_AMT3", value=689.0)
-BILL_AMT4 = st.number_input("BILL_AMT4", value=0.0)
-BILL_AMT5 = st.number_input("BILL_AMT5", value=0.0)
-BILL_AMT6 = st.number_input("BILL_AMT6", value=0.0)
-
-PAY_AMT1 = st.number_input("PAY_AMT1", value=0.0)
-PAY_AMT2 = st.number_input("PAY_AMT2", value=689.0)
-PAY_AMT3 = st.number_input("PAY_AMT3", value=0.0)
-PAY_AMT4 = st.number_input("PAY_AMT4", value=0.0)
-PAY_AMT5 = st.number_input("PAY_AMT5", value=0.0)
-PAY_AMT6 = st.number_input("PAY_AMT6", value=0.0)
+model = joblib.load("04_models/logistic_regression.pkl")
+scaler = joblib.load("04_models/scaler.pkl")
 
 
-if st.button("Predict Default"):
+# ==========================================
+# INPUT DATA MODEL
+# 23 FEATURES
+# ==========================================
 
-    data = {
-        "LIMIT_BAL": LIMIT_BAL,
-        "CHILDREN": CHILDREN,
-        "EDUCATION": EDUCATION,
-        "MARRIAGE": MARRIAGE,
-        "AGE": AGE,
-        "PAY_0": PAY_0,
-        "PAY_2": PAY_2,
-        "PAY_3": PAY_3,
-        "PAY_4": PAY_4,
-        "PAY_5": PAY_5,
-        "PAY_6": PAY_6,
-        "BILL_AMT1": BILL_AMT1,
-        "BILL_AMT2": BILL_AMT2,
-        "BILL_AMT3": BILL_AMT3,
-        "BILL_AMT4": BILL_AMT4,
-        "BILL_AMT5": BILL_AMT5,
-        "BILL_AMT6": BILL_AMT6,
-        "PAY_AMT1": PAY_AMT1,
-        "PAY_AMT2": PAY_AMT2,
-        "PAY_AMT3": PAY_AMT3,
-        "PAY_AMT4": PAY_AMT4,
-        "PAY_AMT5": PAY_AMT5,
-        "PAY_AMT6": PAY_AMT6
+class CustomerData(BaseModel):
+
+    LIMIT_BAL: float
+    CHILDREN: float
+    EDUCATION: float
+    MARRIAGE: float
+    AGE: float
+
+    PAY_0: float
+    PAY_2: float
+    PAY_3: float
+    PAY_4: float
+    PAY_5: float
+    PAY_6: float
+
+    BILL_AMT1: float
+    BILL_AMT2: float
+    BILL_AMT3: float
+    BILL_AMT4: float
+    BILL_AMT5: float
+    BILL_AMT6: float
+
+    PAY_AMT1: float
+    PAY_AMT2: float
+    PAY_AMT3: float
+    PAY_AMT4: float
+    PAY_AMT5: float
+    PAY_AMT6: float
+
+
+# ==========================================
+# HOME ROUTE
+# ==========================================
+
+@app.get("/")
+def home():
+
+    return {
+        "message": "Credit Card Default Prediction API is running"
     }
 
-    response = requests.post(
-        "https://credit-card-defaulter-3.onrender.com/predict",
-        json=data
-    )
 
-    if response.status_code == 200:
+# ==========================================
+# PREDICTION ROUTE
+# ==========================================
 
-        result = response.json()
+@app.post("/predict")
+def predict(data: CustomerData):
 
-        st.subheader("Prediction Result")
+    # Create input array
+    input_data = np.array([[
+        data.LIMIT_BAL,
+        data.CHILDREN,
+        data.EDUCATION,
+        data.MARRIAGE,
+        data.AGE,
 
-        st.write(
-            "Prediction:",
-            result["prediction_label"]
-        )
+        data.PAY_0,
+        data.PAY_2,
+        data.PAY_3,
+        data.PAY_4,
+        data.PAY_5,
+        data.PAY_6,
 
-        st.write(
-            "Default Probability:",
-            f"{result['default_probability']:.2%}"
-        )
+        data.BILL_AMT1,
+        data.BILL_AMT2,
+        data.BILL_AMT3,
+        data.BILL_AMT4,
+        data.BILL_AMT5,
+        data.BILL_AMT6,
 
+        data.PAY_AMT1,
+        data.PAY_AMT2,
+        data.PAY_AMT3,
+        data.PAY_AMT4,
+        data.PAY_AMT5,
+        data.PAY_AMT6
+    ]])
+
+
+    # Scale the input
+    input_scaled = scaler.transform(input_data)
+
+
+    # Make prediction
+    prediction = model.predict(input_scaled)[0]
+
+
+    # Get default probability
+    probability = model.predict_proba(input_scaled)[0][1]
+
+
+    # Convert prediction to label
+    if prediction == 1:
+        result = "Default"
     else:
+        result = "No Default"
 
-        st.error("Could not connect to the prediction API.")
+
+    # Return result to frontend
+    return {
+        "prediction": int(prediction),
+        "prediction_label": result,
+        "default_probability": float(probability)
+    }
+
