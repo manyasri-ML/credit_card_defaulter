@@ -1,8 +1,6 @@
-pandas>=2.0
-numpy>=1.24
-scikit-learn>=1.3
-joblib
-requests
-streamlit
 fastapi
 uvicorn
+numpy
+joblib
+scikit-learn
+pydantic
