@@ -1,16 +1,68 @@
-# Credit Card Default Prediction
+# 💳 Credit Card Default Prediction
 
-A Machine Learning application that predicts whether a credit card customer is likely to default based on customer and credit-related information.
+A Machine Learning project that predicts whether a customer is likely to **default on their credit card payment** based on their financial and demographic information.
 
-The project covers the complete workflow from **data analysis and model building to API development and deployment**.
+The main focus of this project is the **Machine Learning model, data preprocessing, model training, evaluation, and backend API development using FastAPI**.
 
-## Project Overview
+---
 
-Credit card default prediction is a classification problem where the goal is to predict whether a customer will default on their credit card payment.
+## 📌 Project Overview
 
-The trained Machine Learning model is integrated with a **FastAPI backend**, allowing users to send customer information through an API and receive a prediction.
+Credit card default prediction is a binary classification problem.
 
-## Project Workflow
+The model predicts:
+
+* `0` → Customer is unlikely to default
+* `1` → Customer is likely to default
+
+The project demonstrates the complete workflow from **data analysis → machine learning → model saving → API development → deployment**.
+
+---
+
+## 🎯 Project Objectives
+
+* Analyze customer credit card data
+* Perform Exploratory Data Analysis (EDA)
+* Preprocess the dataset
+* Train a Logistic Regression classification model
+* Evaluate model performance
+* Save the trained model
+* Build a REST API using FastAPI
+* Accept new customer information through an API
+* Return a default prediction
+* Deploy the application
+
+---
+
+## 🗂️ Project Structure
+
+```text
+credit_card_default/
+│
+├── 02_notebook/
+│   └── 04_logistic_regression.ipynb
+│
+├── 04_models/
+│   └── logistic_regression.pkl
+│
+├── src/
+│   ├── train.py
+│   └── predict.py
+│
+├── frontend/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+│
+├── app.py
+├── requirements.txt
+├── readme.md
+└── .gitignore
+```
+
+---
+
+## 🔄 Machine Learning Workflow
 
 ```text
 Dataset
@@ -19,216 +71,220 @@ Data Cleaning
    ↓
 Exploratory Data Analysis
    ↓
+Feature Selection
+   ↓
 Data Preprocessing
    ↓
-Model Training
+Train-Test Split
+   ↓
+Logistic Regression
    ↓
 Model Evaluation
    ↓
-Save Trained Model
+Save Model
    ↓
 FastAPI Backend
    ↓
-API Prediction
-   ↓
-Deployed Application
+Prediction API
 ```
 
-## Technologies Used
+---
 
-### Machine Learning
+## 🤖 Machine Learning Model
 
-* Python
-* Pandas
-* NumPy
-* Scikit-learn
-* Matplotlib
-* Joblib
+The project uses **Logistic Regression** for binary classification.
 
-### Backend & API
+### Why Logistic Regression?
 
-* FastAPI
-* Uvicorn
-* Pydantic
+Logistic Regression is suitable for this problem because the target variable has two possible outcomes:
 
-### Development & Deployment
+```text
+0 → No Default
+1 → Default
+```
 
-* Git
-* GitHub
-* Netlify / Deployment Platform
+The model learns the relationship between customer features and the probability of credit card default.
 
-## Machine Learning
+---
 
-This project uses a supervised Machine Learning classification approach.
+## 📊 Model Evaluation
 
-The dataset was analyzed and prepared before training the model. The workflow includes:
+The model was evaluated using classification metrics such as:
 
-* Data cleaning
-* Exploratory Data Analysis (EDA)
-* Feature selection
-* Data preprocessing
-* Model training
-* Model evaluation
-* Cross-validation
-* Saving the trained model
+* Accuracy
+* Precision
+* Recall
+* F1 Score
+* Confusion Matrix
 
-The final trained model is saved using `joblib` and loaded by the FastAPI application for making predictions on new customer data.
+Cross-validation was also used to check the model's performance across different subsets of the training data.
 
-## Backend API
+---
 
-The Machine Learning model is connected to a **FastAPI backend**.
+## 🧠 Backend — FastAPI
 
-The API:
+The trained machine learning model is integrated into a **FastAPI backend**.
 
-1. Receives customer information.
-2. Validates the input using Pydantic.
-3. Loads the trained Machine Learning model.
-4. Processes the input.
-5. Generates a prediction.
-6. Returns the prediction as a JSON response.
+The backend is responsible for:
 
-Example response:
+1. Receiving customer information
+2. Validating the input
+3. Preparing the input for the model
+4. Loading the trained Logistic Regression model
+5. Generating the prediction
+6. Returning the prediction through an API response
+
+### Example API Request
 
 ```json
 {
-    "prediction": 1
+  "LIMIT_BAL": 20000,
+  "SEX": 2,
+  "EDUCATION": 2,
+  "MARRIAGE": 1,
+  "AGE": 24,
+  "PAY_0": 2,
+  "PAY_2": 2,
+  "PAY_3": 0,
+  "PAY_4": 0,
+  "PAY_5": 0,
+  "PAY_6": 0
 }
 ```
 
-Where the prediction represents the model's classification of the customer's default risk.
+### Example Response
 
-## Application Interface
+```json
+{
+  "prediction": 0,
+  "message": "Customer is unlikely to default"
+}
+```
 
-A basic web interface is used to provide inputs and display the prediction from the API.
+---
 
-The primary focus of this project is the **Machine Learning model, Python backend, API integration, and deployment** rather than frontend development.
+## 🔌 API Endpoint
 
-## Project Structure
+The backend provides an endpoint for making predictions.
 
 ```text
-credit-card-default-prediction/
-│
-├── data/
-│   └── dataset.csv
-│
-├── notebooks/
-│   └── credit_card_default.ipynb
-│
-├── src/
-│   ├── train.py
-│   └── predict.py
-│
-├── model/
-│   └── model.pkl
-│
-├── frontend/
-│   └── index.html
-│
-├── app.py
-├── requirements.txt
-├── README.md
-└── .gitignore
+POST /predict
 ```
 
-> The exact folder and file names may vary depending on the final project structure.
+The API accepts customer details and returns the predicted credit card default status.
 
-## Running the Project Locally
+FastAPI also provides interactive API documentation through:
 
-### 1. Clone the repository
-
-```bash
-git clone <your-github-repository-url>
-cd credit-card-default-prediction
+```text
+/docs
 ```
 
-### 2. Create a virtual environment
+---
 
-```bash
-python -m venv venv
-```
+## 🌐 Frontend
 
-### 3. Activate the virtual environment
+A basic frontend interface was used to demonstrate the connection between the user interface and the FastAPI backend.
 
-**Windows:**
+**The frontend was not the main focus of this project.**
 
-```bash
-venv\Scripts\activate
-```
+The primary work and learning focus was on:
 
-### 4. Install dependencies
+* Machine Learning
+* Data preprocessing
+* Model training
+* Model evaluation
+* Model serialization
+* FastAPI
+* API integration
+* Backend deployment
 
-```bash
-pip install -r requirements.txt
-```
+The frontend was used mainly as a demonstration interface for sending input data to the prediction API.
 
-### 5. Start the FastAPI server
+---
+
+## 🚀 Deployment
+
+The backend API was prepared for deployment so that the machine learning prediction service can be accessed remotely.
+
+The application uses **Uvicorn** as the ASGI server for running FastAPI.
+
+Example:
 
 ```bash
 python -m uvicorn app:app --host 0.0.0.0 --port 8001
 ```
 
-The API will be available locally.
+---
 
-You can also access the FastAPI documentation at:
+## 🛠️ Technologies Used
 
-```text
-http://127.0.0.1:8001/docs
-```
+### Machine Learning
 
-## API Usage
+* Python
+* NumPy
+* Pandas
+* Scikit-learn
+* Joblib
 
-The API accepts customer information through a POST request.
+### Data Visualization
 
-Example:
+* Matplotlib
+* Seaborn
 
-```json
-{
-    "limit_bal": 20000,
-    "sex": 2,
-    "education": 2,
-    "marriage": 1,
-    "age": 24
-}
-```
+### Backend
 
-The API processes the input using the trained model and returns the predicted result.
+* FastAPI
+* Pydantic
+* Uvicorn
 
-## Deployment
+### Deployment & Version Control
 
-The FastAPI backend is deployed so that the Machine Learning model can be accessed through an API.
+* Git
+* GitHub
+* Netlify / deployment platform for demonstration
 
-The application can therefore be used as a real-world ML application instead of only running the model inside a Jupyter Notebook.
+---
 
-## Key Learning Outcomes
+## 📚 What I Learned
 
 Through this project, I worked with:
 
 * Exploratory Data Analysis
 * Data preprocessing
-* Supervised Machine Learning
-* Classification
-* Model evaluation
+* Feature selection
+* Train-test splitting
+* Logistic Regression
 * Cross-validation
-* Saving and loading ML models
-* Building REST APIs using FastAPI
-* Input validation using Pydantic
-* Connecting a Machine Learning model to an API
-* Testing APIs
+* Classification metrics
+* Confusion matrix
+* Model serialization using Joblib
+* Creating APIs with FastAPI
+* Request validation using Pydantic
+* Connecting a machine learning model with an API
 * Git and GitHub
-* Deploying an ML application
+* Deploying a machine learning application
 
-## Future Improvements
+---
 
-* Improve model performance through feature engineering and hyperparameter tuning.
-* Add additional model comparison.
-* Improve API validation and error handling.
-* Develop a more advanced user interface.
-* Monitor model performance after deployment.
+## 🔮 Future Improvements
 
-## Author
+Possible improvements include:
+
+* Trying additional classification algorithms
+* Hyperparameter tuning
+* Handling class imbalance
+* Improving feature engineering
+* Comparing multiple models
+* Improving API security
+* Building a more advanced frontend
+* Adding monitoring for deployed predictions
+
+---
+
+## 👩‍💻 Author
 
 **Manyasri**
 
-Machine Learning / Python Project
+This project was developed as a practical Machine Learning project to understand the complete process of taking a trained ML model from experimentation to a deployable backend API.
 
 
