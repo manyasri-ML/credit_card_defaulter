@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import numpy as np
+import pandas as pd
 import joblib
 
 
@@ -18,7 +19,8 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500"],
+    allow_origins=[ "http://127.0.0.1:5500",
+        "http://localhost:5500"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -87,55 +89,50 @@ def home():
 @app.post("/predict")
 def predict(data: CustomerData):
 
-    # Create input array
-    input_data = np.array([[
-        data.LIMIT_BAL,
-        data.CHILDREN,
-        data.EDUCATION,
-        data.MARRIAGE,
-        data.AGE,
+    # Create input DataFrame
+    input_data = pd.DataFrame([{
+        "LIMIT_BAL": data.LIMIT_BAL,
+        "CHILDREN": data.CHILDREN,
+        "EDUCATION": data.EDUCATION,
+        "MARRIAGE": data.MARRIAGE,
+        "AGE": data.AGE,
 
-        data.PAY_0,
-        data.PAY_2,
-        data.PAY_3,
-        data.PAY_4,
-        data.PAY_5,
-        data.PAY_6,
+        "PAY_0": data.PAY_0,
+        "PAY_2": data.PAY_2,
+        "PAY_3": data.PAY_3,
+        "PAY_4": data.PAY_4,
+        "PAY_5": data.PAY_5,
+        "PAY_6": data.PAY_6,
 
-        data.BILL_AMT1,
-        data.BILL_AMT2,
-        data.BILL_AMT3,
-        data.BILL_AMT4,
-        data.BILL_AMT5,
-        data.BILL_AMT6,
+        "BILL_AMT1": data.BILL_AMT1,
+        "BILL_AMT2": data.BILL_AMT2,
+        "BILL_AMT3": data.BILL_AMT3,
+        "BILL_AMT4": data.BILL_AMT4,
+        "BILL_AMT5": data.BILL_AMT5,
+        "BILL_AMT6": data.BILL_AMT6,
 
-        data.PAY_AMT1,
-        data.PAY_AMT2,
-        data.PAY_AMT3,
-        data.PAY_AMT4,
-        data.PAY_AMT5,
-        data.PAY_AMT6
-    ]])
-
+        "PAY_AMT1": data.PAY_AMT1,
+        "PAY_AMT2": data.PAY_AMT2,
+        "PAY_AMT3": data.PAY_AMT3,
+        "PAY_AMT4": data.PAY_AMT4,
+        "PAY_AMT5": data.PAY_AMT5,
+        "PAY_AMT6": data.PAY_AMT6
+    }])
 
     # Scale the input
     input_scaled = scaler.transform(input_data)
 
-
     # Make prediction
     prediction = model.predict(input_scaled)[0]
 
-
     # Get default probability
     probability = model.predict_proba(input_scaled)[0][1]
-
 
     # Convert prediction to label
     if prediction == 1:
         result = "Default"
     else:
         result = "No Default"
-
 
     # Return result to frontend
     return {
@@ -144,3 +141,4 @@ def predict(data: CustomerData):
         "default_probability": float(probability)
     }
 
+   

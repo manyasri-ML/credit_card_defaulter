@@ -104,16 +104,15 @@ form.addEventListener("submit", async function (event) {
     }
 
 
-    catch (error) {
+   catch (error) {
 
-        loading.classList.add("hidden");
+    loading.classList.add("hidden");
 
-        result.classList.remove("hidden");
+    result.classList.remove("hidden");
 
-        predictionText.innerHTML =
-            "Error: Could not connect to the prediction API.";
+    predictionText.innerHTML =
+        "Error: " + error.message;
 
-        console.error(error);
-    }
-
+    console.error("FULL ERROR:", error);
+}
 });
