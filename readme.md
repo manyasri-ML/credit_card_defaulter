@@ -1,68 +1,10 @@
 # 💳 Credit Card Default Prediction
 
-A Machine Learning project that predicts whether a customer is likely to **default on their credit card payment** based on their financial and demographic information.
-
-The main focus of this project is the **Machine Learning model, data preprocessing, model training, evaluation, and backend API development using FastAPI**.
-
----
-
 ## 📌 Project Overview
 
-Credit card default prediction is a binary classification problem.
+This project is a **Machine Learning web application** that predicts whether a credit card customer is likely to default on their payment.
 
-The model predicts:
-
-* `0` → Customer is unlikely to default
-* `1` → Customer is likely to default
-
-The project demonstrates the complete workflow from **data analysis → machine learning → model saving → API development → deployment**.
-
----
-
-## 🎯 Project Objectives
-
-* Analyze customer credit card data
-* Perform Exploratory Data Analysis (EDA)
-* Preprocess the dataset
-* Train a Logistic Regression classification model
-* Evaluate model performance
-* Save the trained model
-* Build a REST API using FastAPI
-* Accept new customer information through an API
-* Return a default prediction
-* Deploy the application
-
----
-
-## 🗂️ Project Structure
-
-```text
-credit_card_default/
-│
-├── 02_notebook/
-│   └── 04_logistic_regression.ipynb
-│
-├── 04_models/
-│   └── logistic_regression.pkl
-│
-├── src/
-│   ├── train.py
-│   └── predict.py
-│
-├── frontend/
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
-│
-├── app.py
-├── requirements.txt
-├── readme.md
-└── .gitignore
-```
-
----
-
-## 🔄 Machine Learning Workflow
+The project covers the complete ML application workflow:
 
 ```text
 Dataset
@@ -71,220 +13,765 @@ Data Cleaning
    ↓
 Exploratory Data Analysis
    ↓
-Feature Selection
+Feature Preparation
    ↓
-Data Preprocessing
-   ↓
-Train-Test Split
-   ↓
-Logistic Regression
+Model Training
    ↓
 Model Evaluation
    ↓
-Save Model
+Model Saving
    ↓
 FastAPI Backend
    ↓
-Prediction API
+Frontend
+   ↓
+Prediction
 ```
+
+The trained Machine Learning model is integrated with a **FastAPI backend** and a **web frontend**, allowing users to enter customer information and receive a prediction.
 
 ---
 
-## 🤖 Machine Learning Model
+# 🎯 Project Objective
 
-The project uses **Logistic Regression** for binary classification.
+The objective of this project is to predict whether a customer will default on their credit card payment.
 
-### Why Logistic Regression?
-
-Logistic Regression is suitable for this problem because the target variable has two possible outcomes:
+The target variable is binary:
 
 ```text
 0 → No Default
 1 → Default
 ```
 
-The model learns the relationship between customer features and the probability of credit card default.
+The application also returns the probability of default.
+
+Example:
+
+```text
+Prediction: Default
+Default Probability: 72.45%
+```
 
 ---
 
-## 📊 Model Evaluation
+# 📊 Dataset
 
-The model was evaluated using classification metrics such as:
+The dataset contains demographic information, credit information, payment history, bill amounts, and previous payment amounts.
 
-* Accuracy
-* Precision
-* Recall
-* F1 Score
-* Confusion Matrix
+### Customer Information
 
-Cross-validation was also used to check the model's performance across different subsets of the training data.
+* `LIMIT_BAL` — Credit limit
+* `EDUCATION` — Education level
+* `MARRIAGE` — Marital status
+* `AGE` — Customer age
+* `CHILDREN` — Number of children
+
+### Payment History
+
+* `PAY_0`
+* `PAY_2`
+* `PAY_3`
+* `PAY_4`
+* `PAY_5`
+* `PAY_6`
+
+### Bill Amounts
+
+* `BILL_AMT1`
+* `BILL_AMT2`
+* `BILL_AMT3`
+* `BILL_AMT4`
+* `BILL_AMT5`
+* `BILL_AMT6`
+
+### Previous Payments
+
+* `PAY_AMT1`
+* `PAY_AMT2`
+* `PAY_AMT3`
+* `PAY_AMT4`
+* `PAY_AMT5`
+* `PAY_AMT6`
 
 ---
 
-## 🧠 Backend — FastAPI
+# 🔎 Exploratory Data Analysis
 
-The trained machine learning model is integrated into a **FastAPI backend**.
+Exploratory Data Analysis was performed to understand the dataset before building the model.
+
+The analysis included:
+
+* Understanding the dataset structure
+* Checking missing values
+* Checking duplicate records
+* Analyzing numerical features
+* Analyzing categorical features
+* Studying feature distributions
+* Checking correlations
+* Understanding the target variable
+* Studying relationships between customer characteristics and default behavior
+
+EDA helped determine how the data should be prepared before training the model.
+
+---
+
+# 🤖 Machine Learning Model
+
+This project uses **Logistic Regression** for binary classification.
+
+The model predicts:
+
+```text
+0 → No Default
+1 → Default
+```
+
+Logistic Regression was selected because the problem is a binary classification problem and the model can provide prediction probabilities.
+
+---
+
+# ⚙️ Data Preprocessing
+
+Before sending customer data to the model, the input features are scaled using the same scaler used during model training.
+
+The prediction pipeline is:
+
+```text
+User Input
+    ↓
+Scaler
+    ↓
+Scaled Features
+    ↓
+Logistic Regression
+    ↓
+Prediction
+    ↓
+Probability
+```
+
+The trained scaler is saved so that new data is transformed in the same way as the training data.
+
+---
+
+# 💾 Saved Machine Learning Files
+
+The trained model files are stored inside:
+
+```text
+04_models/
+```
+
+They include:
+
+```text
+04_models/
+├── logistic_regression.pkl
+└── scaler.pkl
+```
+
+### `logistic_regression.pkl`
+
+Contains the trained Logistic Regression model.
+
+### `scaler.pkl`
+
+Contains the scaler used for preprocessing.
+
+Saving these files allows the trained model to be loaded later without retraining it every time the application starts.
+
+---
+
+# 📁 Project Structure
+
+The complete project is organized as follows:
+
+```text
+credict_card_fault/
+│
+├── 01_data/
+│   └|─ 01_raw
+│    |     |___credit_card_default.csv
+|    |___02_processed
+|           |__cleaned_data.csv
+├── 02_notebook/
+│   └── Jupyter notebooks
+│       ├── 01_credit_default_analysis.ipynb
+│       ├── 02_data_cleaning.ipynb
+│       ├── 03_eda.ipynb
+│       └── 04_logistic_regression.pkl
+│
+├── 04_models/
+│   ├── logistic_regression.pkl
+│   └── scaler.pkl
+│
+├── frontend/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+│
+├── src/
+│   └── __init__.py
+│   |___predict.py
+|   |___train.py
+├── app.py
+├── requirement.txt
+├── readme.md
+└── venv/
+```
+
+### Folder Responsibilities
+
+| Folder/File       | Purpose                                          |
+| ----------------- | ------------------------------------------------ |
+| `01_data/`        | Stores the dataset                               |
+| `02_notebook/`    | EDA, preprocessing, training and experimentation |
+| `04_models/`      | Stores trained ML model and scaler               |
+| `frontend/`       | User interface                                   |
+| `src/`            | Supporting project/source files                  |
+| `app.py`          | FastAPI backend                                  |
+| `requirement.txt` | Python dependencies                              |
+| `readme.md`       | Project documentation                            |
+| `venv/`           | Python virtual environment                       |
+
+---
+
+# 🎨 Frontend
+
+The frontend is located inside:
+
+```text
+frontend/
+```
+
+It contains:
+
+```text
+frontend/
+├── index.html
+├── style.css
+└── script.js
+```
+
+### `index.html`
+
+Creates the structure of the web page and input form.
+
+### `style.css`
+
+Controls the appearance and layout of the application.
+
+### `script.js`
+
+Handles:
+
+* Reading user input
+* Converting values into numbers
+* Creating the JSON request
+* Sending the request to FastAPI
+* Receiving the prediction
+* Displaying the prediction result
+
+The frontend was developed with **AI assistance**, particularly for creating and improving the HTML, CSS, and JavaScript interface. The frontend is integrated with the FastAPI backend and the trained ML model as part of this project.
+
+---
+
+# 🚀 Backend API
+
+The backend is implemented using **FastAPI**.
+
+The backend file is:
+
+```text
+app.py
+```
 
 The backend is responsible for:
 
-1. Receiving customer information
+1. Receiving customer data
 2. Validating the input
-3. Preparing the input for the model
-4. Loading the trained Logistic Regression model
-5. Generating the prediction
-6. Returning the prediction through an API response
+3. Preparing the input
+4. Scaling the features
+5. Loading the trained ML model
+6. Making the prediction
+7. Calculating the default probability
+8. Returning the result as JSON
 
-### Example API Request
+---
 
-```json
-{
-  "LIMIT_BAL": 20000,
-  "SEX": 2,
-  "EDUCATION": 2,
-  "MARRIAGE": 1,
-  "AGE": 24,
-  "PAY_0": 2,
-  "PAY_2": 2,
-  "PAY_3": 0,
-  "PAY_4": 0,
-  "PAY_5": 0,
-  "PAY_6": 0
-}
+# 🌐 API Endpoints
+
+## Home Endpoint
+
+```text
+GET /
 ```
 
-### Example Response
+Used to check whether the API is running.
+
+Example response:
 
 ```json
 {
-  "prediction": 0,
-  "message": "Customer is unlikely to default"
+    "message": "Credit Card Default Prediction API is running"
 }
 ```
 
 ---
 
-## 🔌 API Endpoint
-
-The backend provides an endpoint for making predictions.
+## Prediction Endpoint
 
 ```text
 POST /predict
 ```
 
-The API accepts customer details and returns the predicted credit card default status.
+This endpoint receives customer information and returns the prediction.
 
-FastAPI also provides interactive API documentation through:
+Example request:
+
+```json
+{
+    "LIMIT_BAL": 50000,
+    "CHILDREN": 0,
+    "EDUCATION": 2,
+    "MARRIAGE": 1,
+    "AGE": 30,
+    "PAY_0": 0,
+    "PAY_2": 0,
+    "PAY_3": 0,
+    "PAY_4": 0,
+    "PAY_5": 0,
+    "PAY_6": 0,
+    "BILL_AMT1": 5000,
+    "BILL_AMT2": 4500,
+    "BILL_AMT3": 4000,
+    "BILL_AMT4": 3500,
+    "BILL_AMT5": 3000,
+    "BILL_AMT6": 2500,
+    "PAY_AMT1": 1000,
+    "PAY_AMT2": 1000,
+    "PAY_AMT3": 1000,
+    "PAY_AMT4": 1000,
+    "PAY_AMT5": 1000,
+    "PAY_AMT6": 1000
+}
+```
+
+Example response:
+
+```json
+{
+    "prediction": 0,
+    "prediction_label": "No Default",
+    "default_probability": 0.23
+}
+```
+
+---
+
+# 🔗 Frontend–Backend Connection
+
+During local development, the frontend and backend run on different ports.
 
 ```text
-/docs
+Frontend
+http://127.0.0.1:5500
+        │
+        │ HTTP Request
+        ↓
+Backend
+http://127.0.0.1:8000
+        │
+        ↓
+/predict
+        │
+        ↓
+ML Model
+```
+
+The frontend sends the prediction request using JavaScript:
+
+```javascript
+fetch("http://127.0.0.1:8000/predict", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+});
 ```
 
 ---
 
-## 🌐 Frontend
+# 🔄 Complete Prediction Flow
 
-A basic frontend interface was used to demonstrate the connection between the user interface and the FastAPI backend.
+The complete application works as follows:
 
-**The frontend was not the main focus of this project.**
-
-The primary work and learning focus was on:
-
-* Machine Learning
-* Data preprocessing
-* Model training
-* Model evaluation
-* Model serialization
-* FastAPI
-* API integration
-* Backend deployment
-
-The frontend was used mainly as a demonstration interface for sending input data to the prediction API.
-
----
-
-## 🚀 Deployment
-
-The backend API was prepared for deployment so that the machine learning prediction service can be accessed remotely.
-
-The application uses **Uvicorn** as the ASGI server for running FastAPI.
-
-Example:
-
-```bash
-python -m uvicorn app:app --host 0.0.0.0 --port 8001
+```text
+                    USER
+                      │
+                      ↓
+                 FRONTEND
+               HTML / CSS / JS
+                      │
+                      ↓
+                  fetch()
+                      │
+                      ↓
+                    JSON
+                      │
+                      ↓
+              FASTAPI BACKEND
+                      │
+                      ↓
+               Input Validation
+                      │
+                      ↓
+                   Scaler
+                      │
+                      ↓
+            Logistic Regression
+                      │
+                      ↓
+                 Prediction
+                      │
+                      ↓
+               Probability
+                      │
+                      ↓
+                    JSON
+                      │
+                      ↓
+                  FRONTEND
+                      │
+                      ↓
+                Display Result
 ```
 
 ---
 
-## 🛠️ Technologies Used
+# 🔐 CORS
 
-### Machine Learning
+The frontend and backend run on different origins during local development.
+
+Frontend:
+
+```text
+http://127.0.0.1:5500
+```
+
+Backend:
+
+```text
+http://127.0.0.1:8000
+```
+
+The backend therefore allows the frontend origin through CORS.
+
+```python
+allow_origins=[
+    "http://127.0.0.1:5500"
+]
+```
+
+The CORS origin is:
+
+```text
+protocol + host + port
+```
+
+Therefore:
+
+```text
+http://127.0.0.1:5500
+```
+
+is the origin.
+
+The complete frontend page:
+
+```text
+http://127.0.0.1:5500/frontend/index.html
+```
+
+is **not** used as the CORS origin.
+
+---
+
+# 📦 Technologies Used
+
+## Machine Learning
 
 * Python
-* NumPy
 * Pandas
+* NumPy
 * Scikit-learn
 * Joblib
 
-### Data Visualization
+## Backend
 
-* Matplotlib
-* Seaborn
+* FastAPI
+* Uvicorn
+* Pydantic
+
+## Frontend
+
+* HTML
+* CSS
+* JavaScript
+* Fetch API
+
+## Development
+
+* Jupyter Notebook
+* VS Code
+* Git/GitHub
+* AI assistance for frontend development
+
+---
+
+# 🛠️ Installation
+
+Clone the repository:
+
+```bash
+git clone <your-repository-url>
+```
+
+Move into the project:
+
+```bash
+cd credict_card_fault
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows:
+
+```powershell
+venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirement.txt
+```
+
+---
+
+# ▶️ Run the Backend
+
+Start the FastAPI server:
+
+```bash
+uvicorn app:app --reload --port 8000
+```
+
+The backend will run at:
+
+```text
+http://127.0.0.1:8000
+```
+
+FastAPI Swagger documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+The `/docs` page can be used to test the API directly.
+
+---
+
+# ▶️ Run the Frontend
+
+Open the `frontend/index.html` file using a local development server such as VS Code Live Server.
+
+For example:
+
+```text
+http://127.0.0.1:5500/frontend/index.html
+```
+
+The exact port may vary depending on the local development server.
+
+---
+
+# 🧪 Testing
+
+The application can be tested in two ways.
+
+### 1. Backend testing
+
+Use FastAPI Swagger:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Test:
+
+```text
+POST /predict
+```
+
+### 2. Frontend testing
+
+Open the frontend application and enter customer information.
+
+The frontend sends the information to the backend, and the prediction is displayed on the webpage.
+
+---
+
+# 🌍 Deployment
+
+During development, the application uses localhost:
+
+```text
+Frontend:
+http://127.0.0.1:5500
+
+Backend:
+http://127.0.0.1:8000
+```
+
+After deployment, these will be replaced with public URLs.
+
+For example:
+
+```text
+Frontend:
+https://your-frontend-domain.com
+
+Backend:
+https://your-api-domain.com
+```
+
+The frontend will then send requests to:
+
+```text
+https://your-api-domain.com/predict
+```
+
+The backend CORS configuration will also need to allow the deployed frontend domain.
+
+---
+
+# 🧠 What I Learned
+
+Through this project, I learned how to build an ML application from model development to API integration.
+
+### Machine Learning
+
+* Data cleaning
+* Exploratory Data Analysis
+* Feature preparation
+* Logistic Regression
+* Model evaluation
+* Model serialization
+* Prediction probabilities
+
+### ML Engineering
+
+* Saving trained models
+* Saving preprocessing objects
+* Loading models into an application
+* Building an inference pipeline
 
 ### Backend
 
 * FastAPI
-* Pydantic
+* REST API concepts
+* API endpoints
+* HTTP methods
+* Pydantic validation
+* JSON
+* CORS
 * Uvicorn
 
-### Deployment & Version Control
+### Frontend
 
-* Git
-* GitHub
-* Netlify / deployment platform for demonstration
+* HTML forms
+* CSS styling
+* JavaScript
+* Fetch API
+* Sending JSON to an API
+* Receiving JSON responses
+* Displaying ML predictions
 
----
+### Deployment Concepts
 
-## 📚 What I Learned
-
-Through this project, I worked with:
-
-* Exploratory Data Analysis
-* Data preprocessing
-* Feature selection
-* Train-test splitting
-* Logistic Regression
-* Cross-validation
-* Classification metrics
-* Confusion matrix
-* Model serialization using Joblib
-* Creating APIs with FastAPI
-* Request validation using Pydantic
-* Connecting a machine learning model with an API
-* Git and GitHub
-* Deploying a machine learning application
+* Localhost
+* Ports
+* Frontend/backend separation
+* API URLs
+* Production deployment architecture
 
 ---
 
-## 🔮 Future Improvements
+# 🚀 Future Improvements
 
-Possible improvements include:
+Possible future improvements include:
 
-* Trying additional classification algorithms
-* Hyperparameter tuning
-* Handling class imbalance
-* Improving feature engineering
-* Comparing multiple models
-* Improving API security
-* Building a more advanced frontend
-* Adding monitoring for deployed predictions
+* Compare multiple ML algorithms
+* Improve model performance
+* Add stronger input validation
+* Improve frontend design
+* Add automated tests
+* Add logging
+* Add model monitoring
+* Add authentication
+* Deploy the application to the cloud
+* Add CI/CD
+* Use environment variables for API configuration
 
 ---
 
-## 👩‍💻 Author
+# 👩‍💻 Author
 
 **Manyasri**
 
-This project was developed as a practical Machine Learning project to understand the complete process of taking a trained ML model from experimentation to a deployable backend API.
+Credit Card Default Prediction — Machine Learning Application
+
+---
+
+## ⭐ Project Summary
+
+This project demonstrates how a trained Machine Learning model can be transformed into a usable application.
+
+The final architecture is:
+
+```text
+                  USER
+                    │
+                    ↓
+                FRONTEND
+                    │
+                    ↓
+              FASTAPI API
+                    │
+                    ↓
+            PREPROCESSING
+                    │
+                    ↓
+              ML MODEL
+                    │
+                    ↓
+               PREDICTION
+                    │
+                    ↓
+                FRONTEND
+                    │
+                    ↓
+                  USER
+```
+
+The project combines **Machine Learning + Python + FastAPI + REST API + JSON + JavaScript + HTML + CSS** into one complete application.
+
 
 
