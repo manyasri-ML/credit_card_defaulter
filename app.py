@@ -22,7 +22,7 @@ def health_check():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[ "https://calm-mooncake-e7d9fd.netlify.app/"],
+    allow_origins=[ "https://calm-mooncake-e7d9fd.netlify.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
