@@ -55,6 +55,7 @@ form.addEventListener("submit", async function (event) {
     try {
 
         // Send data to FastAPI
+        fetch(`${API_URL}/health`);
         const response = await fetch(
             `${API_BASE_URL}/predict`,
             {
