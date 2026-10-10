@@ -1,6 +1,6 @@
 fastapi
 pandas
-matplotlibgit status
+matplotlib
 uvicorn
 numpy
 joblib
