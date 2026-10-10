@@ -1,3 +1,4 @@
+const API_BASE_URL = "http://127.0.0.1:8000";
 const form = document.getElementById("predictionForm");
 
 const loading = document.getElementById("loading");
@@ -55,7 +56,7 @@ form.addEventListener("submit", async function (event) {
 
         // Send data to FastAPI
         const response = await fetch(
-            "http://127.0.0.1:8000/predict",
+            `${API_BASE_URL}/predict`,
             {
                 method: "POST",
 
@@ -116,3 +117,21 @@ form.addEventListener("submit", async function (event) {
     console.error("FULL ERROR:", error);
 }
 });
+// Check backend connection
+async function checkBackend() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/health`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Backend status:", data.status);
+
+    } catch (error) {
+        console.error("Backend connection failed:", error);
+    }
+}
+
+checkBackend();
