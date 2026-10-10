@@ -1,4 +1,6 @@
 fastapi
+pandas
+matplotlib
 uvicorn
 numpy
 joblib
